@@ -19,18 +19,20 @@
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
 
-Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_1X);
 ClosedCube::Wired::TCA9548A tca9548a;
 
 void init_color(){
   tca9548a.address(0x70);
-
     tca9548a.selectChannel(5);   
     if (tcs.begin()) {
       Serial.println("Color is good");
     } else {
       Serial.println("No TCS34725 found ... check your connections");
-      while (1){Serial.println("COLOR IS NOT GOOD.");}; // halt!
+      while (1){
+        Serial.println("COLOR IS NOT GOOD.");
+        delay(100);
+        }; // halt!
     }
 }
 
@@ -38,6 +40,8 @@ void setup() {
   Serial.begin(9600);
   Wire.setSDA(20);
   Wire.setSCL(21);
+  Wire.begin();
+  init_color();
 
 //   // use these three pins to drive an LED
 // #if defined(ARDUINO_ARCH_ESP32)
@@ -65,14 +69,14 @@ void setup() {
 //     }
 //     //Serial.println(gammatable[i]);
 //   }
- }
+}
 
 // The commented out code in loop is example of getRawData with clear value.
 // Processing example colorview.pde can work with this kind of data too, but It requires manual conversion to 
 // [0-255] RGB value. You can still uncomments parts of colorview.pde and play with clear value.
+float red, green, blue;
 void getcolor() {
-  float red, green, blue;
-  
+
   tcs.setInterrupt(false);  // turn on LED
 
   delay(60);  // takes 50ms to read
@@ -85,36 +89,9 @@ void getcolor() {
   Serial.print("\tG:\t"); Serial.print(int(green)); 
   Serial.print("\tB:\t"); Serial.print(int(blue));
 
-//  Serial.print("\t");
-//  Serial.print((int)red, HEX); Serial.print((int)green, HEX); Serial.print((int)blue, HEX);
   Serial.print("\n");
+}
 
-//  uint16_t red, green, blue, clear;
-//  
-//  tcs.setInterrupt(false);  // turn on LED
-//
-//  delay(60);  // takes 50ms to read
-//
-//  tcs.getRawData(&red, &green, &blue, &clear);
-//  
-//  tcs.setInterrupt(true);  // turn off LED
-//
-//  Serial.print("C:\t"); Serial.print(int(clear)); 
-//  Serial.print("R:\t"); Serial.print(int(red)); 
-//  Serial.print("\tG:\t"); Serial.print(int(green)); 
-//  Serial.print("\tB:\t"); Serial.print(int(blue));
-//  Serial.println();
-
-// #if defined(ARDUINO_ARCH_ESP32)
-//   ledcWrite(1, gammatable[(int)red]);
-//   ledcWrite(2, gammatable[(int)green]);
-//   ledcWrite(3, gammatable[(int)blue]);
-// #else
-//   analogWrite(redpin, gammatable[(int)red]);
-//   analogWrite(greenpin, gammatable[(int)green]);
-//   analogWrite(bluepin, gammatable[(int)blue]);
-// #endif
- }
 void loop(){
   getcolor();
 }
