@@ -118,9 +118,7 @@ void GetdistanceAll(){
   Serial.print("distRR");  
   Serial.println(distRR);  
   Serial.print("distL");  
-  Serial.println(distL);  
-
-
+  Serial.println(distL); 
 }
 
 void getcolor(){

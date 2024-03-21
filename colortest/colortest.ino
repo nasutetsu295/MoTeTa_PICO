@@ -19,7 +19,6 @@
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
 
-
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 ClosedCube::Wired::TCA9548A tca9548a;
 
@@ -33,13 +32,12 @@ void init_color(){
       Serial.println("No TCS34725 found ... check your connections");
       while (1){Serial.println("COLOR IS NOT GOOD.");}; // halt!
     }
-  
 }
 
 void setup() {
   Serial.begin(9600);
-  // Wire.setSDA(20);
-  // Wire.setSCL(21);
+  Wire.setSDA(20);
+  Wire.setSCL(21);
 
 //   // use these three pins to drive an LED
 // #if defined(ARDUINO_ARCH_ESP32)
@@ -106,7 +104,6 @@ void getcolor() {
 //  Serial.print("\tG:\t"); Serial.print(int(green)); 
 //  Serial.print("\tB:\t"); Serial.print(int(blue));
 //  Serial.println();
-
 
 // #if defined(ARDUINO_ARCH_ESP32)
 //   ledcWrite(1, gammatable[(int)red]);
